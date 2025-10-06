@@ -18,7 +18,8 @@ async def test_message_logger(caplog):
         caplog.set_level(TRACE_LOG_LEVEL)
 
         app = MessageLoggerMiddleware(app)
-        async with httpx.AsyncClient(app=app, base_url="http://testserver") as client:
+        transport = httpx.ASGITransport(app=app)
+        async with httpx.AsyncClient(transport=transport, base_url="http://testserver") as client:
             response = await client.get("/")
         assert response.status_code == 200
         messages = [record.msg % record.args for record in caplog.records]
@@ -38,7 +39,8 @@ async def test_message_logger_exc(caplog):
         caplog.set_level(TRACE_LOG_LEVEL, logger="uvicorn.asgi")
         caplog.set_level(TRACE_LOG_LEVEL)
         app = MessageLoggerMiddleware(app)
-        async with httpx.AsyncClient(app=app, base_url="http://testserver") as client:
+        transport = httpx.ASGITransport(app=app)
+        async with httpx.AsyncClient(transport=transport, base_url="http://testserver") as client:
             with pytest.raises(RuntimeError):
                 await client.get("/")
         messages = [record.msg % record.args for record in caplog.records]
