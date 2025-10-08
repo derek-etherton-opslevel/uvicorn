@@ -76,7 +76,7 @@ async def test_wsgi_post(wsgi_middleware: Callable) -> None:
     ) as client:
         response = await client.post("/", json={"example": 123})
     assert response.status_code == 200
-    assert response.text == '{"example": 123}'
+    assert response.text == '{"example":123}'
 
 
 @pytest.mark.anyio
@@ -141,7 +141,7 @@ def test_build_environ_encoding() -> None:
         "client": None,
         "server": None,
         "query_string": b"a=123&b=456",
-        "headers": [(b"key", b"value1"), (b"key", "value2")],
+        "headers": [(b"key", b"value1"), (b"key", b"value2")],
         "extensions": {},
     }
     message: HTTPRequestEvent = {
