@@ -112,7 +112,7 @@ async def test_wsgi_exc_info(wsgi_middleware: Callable) -> None:
     # The HTTP protocol implementations would catch this error and return 500.
     app = wsgi_middleware(return_exc_info)
     async with httpx.AsyncClient(
-        transport=httpx.ASGITransport(app=app), base_url="http://testserver"
+        transport=httpx.ASGITransport(app=app), base_url="https://testserver"
     ) as client:
         with pytest.raises(RuntimeError):
             response = await client.get("/")
@@ -141,7 +141,7 @@ def test_build_environ_encoding() -> None:
         "client": None,
         "server": None,
         "query_string": b"a=123&b=456",
-        "headers": [(b"key", b"value1"), (b"key", b"value2")],
+        "headers": [(b"key", b"value1"), (b"key", "value2")],
         "extensions": {},
     }
     message: HTTPRequestEvent = {
